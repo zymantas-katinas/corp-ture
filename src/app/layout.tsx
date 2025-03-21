@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
+import { TopbarContent } from "@/components/TopbarContent";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -37,7 +38,7 @@ export default function RootLayout({
       <body className={`${gameFont.variable} antialiased`}>
         {/* Top Navigation */}
         <header className="bg-gradient-to-r from-zinc-900 to-slate-800 text-white py-2 px-4 shadow-md">
-          <div className="max-w-5xl mx-auto flex items-center">
+          <div className="max-w-5xl mx-auto flex items-center justify-between">
             <Link
               href="/"
               className="flex items-center hover:opacity-90 transition-opacity"
@@ -47,6 +48,8 @@ export default function RootLayout({
                 Interview Torture Perfected
               </span>
             </Link>
+
+            <TopbarContent />
           </div>
         </header>
         <main className="max-w-5xl mx-auto px-4 pt-6">{children}</main>

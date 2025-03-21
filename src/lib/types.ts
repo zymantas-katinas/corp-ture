@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 export type CompanyInfo = {
   name: string;
   description: string;
@@ -33,12 +31,19 @@ export type Job = {
   url: string;
 };
 
-export const responseFormat = z.object({
-  response: z.string(),
-  reasoning: z.string(),
-  answerNeeded: z.boolean(),
-  answeredByInterviewerId: z.number(),
-  interviewersMoods: z.record(z.number(), z.string()),
-  hireScore: z.number().min(0).max(100),
-  isFinished: z.boolean(),
-});
+export type InterviewerMood = {
+  mood: string;
+  score: number;
+  emoji: string;
+};
+
+export type InterviewResponse = {
+  response: string;
+  reasoning: string;
+  answerNeeded: boolean;
+  answeredByInterviewerId: number;
+  interviewersMoods: Record<string, InterviewerMood>;
+  hireScore: number;
+  interviewProgress: number;
+  isFinished: boolean;
+};
