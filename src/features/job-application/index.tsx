@@ -20,10 +20,10 @@ export function JobApplication({ jobId }: JobApplicationProps) {
   }, [jobId]);
 
   return (
-    <div className="flex flex-col items-center min-h-screen p-4 pl-16 font-[family-name:var(--font-vt-sans)] relative">
+    <div className="flex flex-col items-center min-h-screen p-4 pt-10 pl-16 font-[family-name:var(--font-vt-sans)] relative">
       <VerticalHireScore interviewResponse={interviewResponse} />
-      <InterviewerPanel interviewResponse={interviewResponse} />
       <ProgressBar interviewResponse={interviewResponse} />
+      <InterviewerPanel interviewResponse={interviewResponse} />
       <InterviewQuestion />
       <InterviewHistory />
     </div>

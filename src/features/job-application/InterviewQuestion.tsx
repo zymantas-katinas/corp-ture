@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { interviewers } from "@/lib/constants";
 import { useInterviewStore } from "@/lib/store";
 import { getMoodForInterviewer } from "@/lib/utils";
+import { DebugInfo } from "./DebugInfo";
 
 export function InterviewQuestion() {
   const {
@@ -18,7 +19,6 @@ export function InterviewQuestion() {
     isLoading,
     error,
     answer,
-    history,
     setAnswer,
     submitAnswer,
     resetInterview,
@@ -39,18 +39,7 @@ export function InterviewQuestion() {
     return (
       <Card className="w-full max-w-5xl shadow-sm hover:shadow-md transition-shadow mb-6">
         <CardContent className="py-6">
-          <div className="flex justify-center items-center h-40">
-            <div className="animate-pulse flex space-x-4">
-              <div className="flex-1 space-y-4 py-1">
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                <div className="space-y-2">
-                  <div className="h-4 bg-gray-200 rounded"></div>
-                  <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="text-center text-gray-500 mt-4">
+          <div className="text-center text-gray-500">
             Loading interview... This may take a few moments.
           </div>
         </CardContent>
@@ -138,31 +127,7 @@ export function InterviewQuestion() {
           )}
         </CardDescription>
 
-        {process.env.NODE_ENV === "development" && (
-          <div className="mt-2 text-xs text-gray-400">
-            <details>
-              <summary>Debug Info</summary>
-              <pre className="text-left overflow-auto max-h-40 bg-gray-100 p-2 rounded text-xs">
-                {JSON.stringify(
-                  {
-                    hasResponse: !!interviewResponse.response,
-                    responseLength: interviewResponse.response?.length || 0,
-                    responseContent:
-                      interviewResponse.response?.substring(0, 100) + "...",
-                    answerNeeded: interviewResponse.answerNeeded,
-                    interviewer: interviewResponse.answeredByInterviewerId,
-                    historyLength: history.length,
-                    isFinished: interviewResponse.isFinished,
-                    hireScore: interviewResponse.hireScore,
-                    interviewersMoods: interviewResponse.interviewersMoods,
-                  },
-                  null,
-                  2
-                )}
-              </pre>
-            </details>
-          </div>
-        )}
+        <DebugInfo interviewResponse={interviewResponse} />
       </CardHeader>
 
       <form onSubmit={handleSubmit}>
@@ -173,14 +138,9 @@ export function InterviewQuestion() {
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
               disabled={isLoading}
-              className="font-[family-name:var(--font-vt-sans)] text-lg min-h-[150px] resize-y p-4 focus:border-blue-400 focus:ring focus:ring-blue-200 focus:ring-opacity-50 border-2 border-blue-200"
+              className="font-[family-name:var(--font-vt-sans)] text-lg min-h-[100px] resize-y p-4 focus:border-blue-400 focus:ring focus:ring-blue-200 focus:ring-opacity-50 border-2 border-blue-200"
               autoFocus
             />
-            {isLoading && (
-              <div className="flex justify-center py-4">
-                <div className="rounded-md h-12 w-12 border-4 border-t-blue-500 border-b-blue-700 border-blue-200 animate-spin"></div>
-              </div>
-            )}
             {error && (
               <div className="text-red-600 font-medium text-lg bg-red-50 p-4 rounded-md border border-red-200 mt-4">
                 <div className="flex items-center space-x-2">

@@ -1,7 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { interviewers } from "@/lib/constants";
 import { InterviewResponse } from "@/lib/types";
-import { InterviewerAvatar } from "./InterviewerAvatar";
 import { getMoodForInterviewer } from "@/lib/utils";
 
 interface InterviewerPanelProps {
@@ -22,13 +21,13 @@ export function InterviewerPanel({ interviewResponse }: InterviewerPanelProps) {
         {interviewers.map((interviewer) => (
           <Card
             key={interviewer.id}
-            className={`flex flex-col items-center gap-1 p-4 hover:shadow-md transition-shadow ${
+            className={`flex flex-col items-center gap-0 p-4 hover:shadow-md transition-shadow ${
               currentInterviewer && currentInterviewer.id === interviewer.id
                 ? "ring-2 ring-blue-500 shadow-md"
                 : ""
             }`}
           >
-            <div className="text-8xl">
+            <div className="text-7xl">
               {
                 getMoodForInterviewer(
                   interviewer.id,

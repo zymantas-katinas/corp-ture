@@ -108,27 +108,23 @@ export const useInterviewStore = create<InterviewState>((set, get) => ({
 
     set({ answer: "", isLoading: true, error: null });
 
-    const updatedHistory = [
-      ...history,
-      { role: "user", content: currentAnswer } as ChatMessage,
-    ];
-
     try {
       const response = await getInterviewResponseAction(
         currentAnswer,
         systemPrompt,
-        updatedHistory
+        history
       );
 
       if (response) {
         set({
           interviewResponse: response,
           history: [
-            ...updatedHistory,
+            ...history,
+            { role: "user", content: currentAnswer },
             {
               role: "assistant",
               content: JSON.stringify(response),
-            } as ChatMessage,
+            },
           ],
           submitted: response.isFinished,
         });

@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { InterviewResponse } from "./types";
 
-// Define the schema that matches the InterviewResponse type
 export const responseFormat: z.ZodType<InterviewResponse> = z.object({
   response: z.string(),
   reasoning: z.string(),
