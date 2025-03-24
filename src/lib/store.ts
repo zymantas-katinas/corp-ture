@@ -144,10 +144,16 @@ export const useInterviewStore = create<InterviewState>((set, get) => ({
     }
   },
 
-  resetInterview: () =>
+  resetInterview: async () => {
     set({
-      initialized: false,
+      interviewResponse: null,
       isLoading: true,
+      initialized: false,
+      submitted: false,
       error: null,
-    }),
+      answer: "",
+      history: [],
+    });
+    await get().initInterview();
+  },
 }));

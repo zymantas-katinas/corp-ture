@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,6 +12,8 @@ import { interviewers } from "@/lib/constants";
 import { useInterviewStore } from "@/lib/store";
 import { getMoodForInterviewer } from "@/lib/utils";
 import { DebugInfo } from "./DebugInfo";
+import { InterviewResultDialog } from "./InterviewResultDialog";
+import { FormattedResponse } from "./FormattedResponse";
 
 export function InterviewQuestion() {
   const {
@@ -23,6 +25,15 @@ export function InterviewQuestion() {
     submitAnswer,
     resetInterview,
   } = useInterviewStore();
+
+  const [showResultDialog, setShowResultDialog] = useState(false);
+
+  useEffect(() => {
+    if (interviewResponse?.isFinished && !showResultDialog) {
+      setShowResultDialog(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [interviewResponse?.isFinished]);
 
   const currentInterviewer = interviewResponse
     ? interviewers.find(
@@ -71,7 +82,7 @@ export function InterviewQuestion() {
               <Button
                 onClick={resetInterview}
                 disabled={isLoading}
-                className="font-[family-name:var(--font-vt-sans)] bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all"
+                className=" bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all"
               >
                 {isLoading ? "Retrying..." : "Retry"}
               </Button>
@@ -90,7 +101,7 @@ export function InterviewQuestion() {
             <p>Unable to start the interview. Please click below to retry.</p>
             <Button
               onClick={resetInterview}
-              className="mt-4 font-[family-name:var(--font-vt-sans)] bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all"
+              className="mt-4  bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all"
             >
               Start Interview
             </Button>
@@ -101,66 +112,41 @@ export function InterviewQuestion() {
   }
 
   return (
-    <Card className="w-full max-w-5xl shadow-sm hover:shadow-md transition-shadow mb-6">
-      <CardHeader className="border-b">
-        {currentInterviewer && (
-          <div className="flex items-center mb-2">
-            <div className="text-2xl mr-2">
-              {
-                getMoodForInterviewer(
-                  currentInterviewer.id,
-                  interviewResponse?.interviewersMoods
-                ).emoji
-              }
-            </div>
-            <span className="font-semibold">{currentInterviewer.name}</span>
-            <span className="text-gray-500 text-sm ml-2">
-              ({currentInterviewer.role})
-            </span>
-          </div>
-        )}
-        <CardDescription className="text-lg whitespace-pre-line font-medium p-4 bg-gray-50 text-gray-900 rounded-md border border-gray-100">
-          {interviewResponse.response || (
-            <div className="text-center text-red-500">
-              No interview question received. Please retry the interview.
+    <>
+      <Card className="w-full max-w-5xl shadow-sm hover:shadow-md transition-shadow mb-6">
+        <CardHeader className="border-b">
+          {currentInterviewer && (
+            <div className="flex items-center mb-2">
+              <div className="text-2xl mr-2">
+                {
+                  getMoodForInterviewer(
+                    currentInterviewer.id,
+                    interviewResponse?.interviewersMoods
+                  ).emoji
+                }
+              </div>
+              <span className="font-semibold">{currentInterviewer.name}</span>
+              <span className="text-gray-500 text-sm ml-2">
+                ({currentInterviewer.role})
+              </span>
             </div>
           )}
-        </CardDescription>
-
-        <DebugInfo interviewResponse={interviewResponse} />
-      </CardHeader>
-
-      <form onSubmit={handleSubmit}>
-        <CardContent>
-          <div className="space-y-4">
-            <Textarea
-              placeholder="Type your answer here..."
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              disabled={isLoading}
-              className="font-[family-name:var(--font-vt-sans)] text-lg min-h-[100px] resize-y p-4 focus:border-blue-400 focus:ring focus:ring-blue-200 focus:ring-opacity-50 border-2 border-blue-200"
-              autoFocus
-            />
-            {error && (
-              <div className="text-red-600 font-medium text-lg bg-red-50 p-4 rounded-md border border-red-200 mt-4">
-                <div className="flex items-center space-x-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span>{error}</span>
-                </div>
+          <CardDescription className="text-lg whitespace-pre-line font-medium p-4 bg-gray-50 text-gray-900 rounded-md border border-gray-100">
+            {interviewResponse.response ? (
+              <FormattedResponse response={interviewResponse.response} />
+            ) : (
+              <div className="text-center text-red-500">
+                No interview question received. Please retry the interview.
               </div>
             )}
-            {interviewResponse.isFinished && (
+          </CardDescription>
+
+          <DebugInfo interviewResponse={interviewResponse} />
+        </CardHeader>
+
+        {interviewResponse.isFinished ? (
+          <CardContent className="py-6">
+            <div className="space-y-4">
               <div className="text-green-600 font-medium text-lg bg-green-50 p-4 rounded-md border border-green-200">
                 <div className="flex items-center space-x-2">
                   <svg
@@ -181,19 +167,65 @@ export function InterviewQuestion() {
                   </span>
                 </div>
               </div>
-            )}
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button
-            type="submit"
-            className="mt-2 w-full font-[family-name:var(--font-vt-sans)] text-lg bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all"
-            disabled={!answer.trim() || isLoading}
-          >
-            {isLoading ? "Processing..." : "Submit Answer"}
-          </Button>
-        </CardFooter>
-      </form>
-    </Card>
+              <Button
+                onClick={resetInterview}
+                className="mt-4 w-full  text-lg bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all"
+              >
+                Try Again
+              </Button>
+            </div>
+          </CardContent>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <CardContent>
+              <div className="space-y-4">
+                <Textarea
+                  placeholder="Type your answer here..."
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  disabled={isLoading}
+                  className=" text-lg min-h-[100px] resize-y p-4 focus:border-blue-400 focus:ring focus:ring-blue-200 focus:ring-opacity-50 border-2 border-blue-200"
+                  autoFocus
+                />
+                {error && (
+                  <div className="text-red-600 font-medium text-lg bg-red-50 p-4 rounded-md border border-red-200 mt-4">
+                    <div className="flex items-center space-x-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span>{error}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button
+                type="submit"
+                className="mt-2 w-full  text-lg bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all"
+                disabled={!answer.trim() || isLoading}
+              >
+                {isLoading ? "Processing..." : "Submit Answer"}
+              </Button>
+            </CardFooter>
+          </form>
+        )}
+      </Card>
+
+      <InterviewResultDialog
+        open={showResultDialog}
+        onOpenChange={setShowResultDialog}
+        interviewResponse={interviewResponse}
+      />
+    </>
   );
 }

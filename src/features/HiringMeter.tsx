@@ -67,7 +67,7 @@ export function HiringMeter({ score }: HiringMeterProps) {
   };
 
   return (
-    <div className="fixed right-4 top-4 w-56 bg-white rounded-xl shadow-lg overflow-hidden z-50 font-[family-name:var(--font-vt-sans)]">
+    <div className="fixed right-4 top-4 w-56 bg-white rounded-xl shadow-lg overflow-hidden z-50 ">
       {/* Header with emoji and score */}
       <div
         className="p-3 text-white"

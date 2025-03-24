@@ -2,6 +2,7 @@ import { interviewers } from "@/lib/constants";
 import { InterviewResponse } from "@/lib/types";
 import { useInterviewStore } from "@/lib/store";
 import { getMoodForInterviewer } from "@/lib/utils";
+import { FormattedResponse } from "./FormattedResponse";
 
 export function InterviewHistory() {
   const { history } = useInterviewStore();
@@ -48,7 +49,9 @@ export function InterviewHistory() {
                     <div className="text-2xl mr-2">{interviewerMood.emoji}</div>
                     {respInterviewer.name} ({respInterviewer.role}):
                   </div>
-                  <div className="whitespace-pre-line">{response.response}</div>
+                  <div className="whitespace-pre-line">
+                    <FormattedResponse response={response.response} />
+                  </div>
                 </div>
               )}
             </div>

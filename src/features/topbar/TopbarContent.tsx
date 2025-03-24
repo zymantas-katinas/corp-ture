@@ -37,9 +37,7 @@ export function TopbarContent() {
       </Link>
       <div>
         <h1 className="text-sm font-bold text-white">{job.name}</h1>
-        <p className="text-xs text-gray-300">
-          {job.company} • {job.location}
-        </p>
+        <p className="text-xs text-gray-300">{job.company}</p>
       </div>
     </div>
   );

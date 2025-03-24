@@ -1,26 +1,13 @@
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
-import Link from "next/link";
 import "./globals.css";
-import { TopbarContent } from "@/features/topbar/TopbarContent";
 import { TopBar } from "@/features/topbar/TopBar";
 
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const vtSans = Pixelify_Sans({
-//   variable: "--font-vt-sans",
-//   // subsets: ["latin"],
-//   weight: "400",
-// });
-
-export const gameFont = Noto_Sans({
+export const mainFont = Noto_Sans({
   weight: ["400", "700"],
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-vt-sans",
+  variable: "--font-main",
 });
 
 export const metadata: Metadata = {
@@ -36,9 +23,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${gameFont.variable} antialiased`}>
+      <body className={`${mainFont.variable} antialiased`}>
         <TopBar />
-        <main className="max-w-5xl mx-auto px-4 pt-6">{children}</main>
+        <main className="max-w-5xl font-main mx-auto px-4 pt-6">
+          {children}
+        </main>
       </body>
     </html>
   );
